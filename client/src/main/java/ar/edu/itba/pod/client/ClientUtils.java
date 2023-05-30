@@ -115,7 +115,6 @@ public class ClientUtils {
         final int BATCH_SIZE = 500000;
         do {
             aux.clear();
-            System.out.println("Reading batch " + (i+1));
             try (Stream<String> lines = Files.lines(Path.of(inPath))) {
                 lines.skip(1 + (long) i *BATCH_SIZE).limit(BATCH_SIZE)
                         .map(l -> l.split(";"))
@@ -135,7 +134,6 @@ public class ClientUtils {
                         .forEach(aux::add);
                 i++;
                 bikesIList.addAll(aux);
-                System.out.println("Added batch " + (i+1) + "with size " + aux.size());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
