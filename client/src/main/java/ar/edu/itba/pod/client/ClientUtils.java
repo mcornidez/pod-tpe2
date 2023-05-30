@@ -1,12 +1,13 @@
 package ar.edu.itba.pod.client;
 
-import ar.edu.itba.pod.BikeRent;
-import ar.edu.itba.pod.Station;
+import ar.edu.itba.pod.models.BikeRent;
+import ar.edu.itba.pod.models.Station;
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.client.config.ClientNetworkConfig;
 import com.hazelcast.config.GroupConfig;
 import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.core.IList;
 import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
@@ -67,53 +68,78 @@ public class ClientUtils {
         return HazelcastClient.newHazelcastClient(clientConfig);
     }
 
-    public static List<BikeRent> parseBikes (List<String[]> bikes) throws ParseException {
+    public static List<BikeRent> parseBikes (List<String> bikes){
         List<BikeRent> bikesList = new ArrayList<>();
-        for (String[] s : bikes){
-            Date start_date = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SS").parse(s[0]);
-            Date end_date = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SS").parse(s[2]);
-            Integer emplacement_pk_start = Integer.parseInt(s[1]);
-            Integer emplacement_pk_end = Integer.parseInt(s[3]);
-            Integer is_member = Integer.parseInt(s[4]);
-            BikeRent bike = new BikeRent(start_date, end_date, emplacement_pk_start, emplacement_pk_end, is_member);
-            bikesList.add(bike);
+        try {
+            for (String s : bikes) {
+                String[] data = s.split(";");
+                Date start_date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(data[0]);
+                Date end_date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(data[2]);
+                Integer emplacement_pk_start = Integer.parseInt(data[1]);
+                Integer emplacement_pk_end = Integer.parseInt(data[3]);
+                Integer is_member = Integer.parseInt(data[4]);
+                BikeRent bike = new BikeRent(start_date, end_date, emplacement_pk_start, emplacement_pk_end, is_member);
+                bikesList.add(bike);
+            }
+        } catch (ParseException e){
+            logger.error("Error parsing bikes.csv");
         }
         return bikesList;
     }
 
-    public static List<Station> parseStations(List<String[]> stations) throws ParseException {
+    public static List<Station> parseStations(List<String> stations){
         List<Station> stationsList = new ArrayList<>();
-        for (String[] s : stations){
-            Integer pk = Integer.parseInt(s[0]);
-            String name = s[1];
-            Long latitude = Long.parseLong(s[2]);
-            Long longitude = Long.parseLong(s[3]);
+        for (String s : stations){
+            String[] data = s.split(";");
+            Integer pk = Integer.parseInt(data[0]);
+            String name = data[1];
+            Double latitude = Double.parseDouble(data[2]);
+            Double longitude = Double.parseDouble(data[3]);
             Station station = new Station(pk, name, latitude, longitude);
             stationsList.add(station);
         }
         return stationsList;
     }
 
-    public static List<String[]> getCSVData(String inPath) {
-        FileReader filereader = null;
-        try {
-            filereader = new FileReader(inPath);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("File not found");
-        }
+    public static List<String> getCSVData(String inPath) throws IOException {
+        return Files.readAllLines(Path.of(inPath))
+                .stream()
+                .skip(1)
+                .map(String::new)
+                .toList();
 
-        CSVParser parser = new CSVParserBuilder()
-                .withSeparator(';')
-                .build();
-
-        // create csvReader object and skip first Line
-        try (CSVReader csvReader = new CSVReaderBuilder(filereader)
-                .withSkipLines(1)
-                .withCSVParser(parser)
-                .build()) {
-            return csvReader.readAll();
-        } catch (IOException e) {
-            throw new RuntimeException("Error reading file");
+    }
+    public static void fillBikesIList(IList<BikeRent> bikesIList, String inPath) throws ParseException{
+        List<BikeRent> aux = new ArrayList<>();
+        int i = 0;
+        final int BATCH_SIZE = 500000;
+        do {
+            aux.clear();
+            System.out.println("Reading batch " + (i+1));
+            try (Stream<String> lines = Files.lines(Path.of(inPath))) {
+                lines.skip(1 + (long) i *BATCH_SIZE).limit(BATCH_SIZE)
+                        .map(l -> l.split(";"))
+                        .map(data -> {
+                            try {
+                                return new BikeRent(
+                                                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(data[0]),
+                                                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(data[2]),
+                                                Integer.parseInt(data[1]),
+                                                Integer.parseInt(data[3]),
+                                                Integer.parseInt(data[4])
+                                );
+                            } catch (ParseException e) {
+                                throw new RuntimeException(e);
+                            }
+                        })
+                        .forEach(aux::add);
+                i++;
+                bikesIList.addAll(aux);
+                System.out.println("Added batch " + (i+1) + "with size " + aux.size());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
+        while (aux.size() == BATCH_SIZE);
     }
 }
