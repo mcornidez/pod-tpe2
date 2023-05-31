@@ -1,6 +1,7 @@
 package ar.edu.itba.pod.client;
 
 import ar.edu.itba.pod.collators.Query2Collator;
+import ar.edu.itba.pod.combiners.Query2CombinerFactory;
 import ar.edu.itba.pod.mappers.Query2Mapper;
 import ar.edu.itba.pod.models.BikeRent;
 import ar.edu.itba.pod.models.Journey;
@@ -22,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
 
 public class Query2 {
     private static Logger logger = LoggerFactory.getLogger(Query2.class);
@@ -37,8 +37,7 @@ public class Query2 {
 
         logger.info("tpe2-g2 Query2 Starting ...");
 
-        logger.info("Starting bikes parsing...");
-        final LogManager logManager = new LogManager(outPath, "time2.txt");
+        final LogManager logManager = new LogManager(outPath, "/time2.txt");
         logManager.writeLog(
                 Thread.currentThread().getStackTrace()[1].getMethodName(),
                 Query1.class.getName(),
@@ -75,11 +74,24 @@ public class Query2 {
             KeyValueSource<String, BikeRent> keyValueSource = KeyValueSource.fromList(bikesIList);
             Job<String, BikeRent> job = hazelcastInstance.getJobTracker("g2_query1").newJob(keyValueSource);
 
+            //Without combiner
             List<Map.Entry<String, Journey>> result = job
                     .mapper(new Query2Mapper(stations))
                     .reducer(new Query2ReducerFactory())
                     .submit(new Query2Collator())
                     .get();
+
+/*
+            //With combiner
+            List<Map.Entry<String, Journey>> result = job
+                    .mapper(new Query2Mapper(stations))
+                    .combiner(new Query2CombinerFactory())
+                    .reducer(new Query2ReducerFactory())
+                    .submit(new Query2Collator())
+                    .get();
+
+
+ */
 
 
             logManager.writeLog(
@@ -121,6 +133,7 @@ public class Query2 {
                 buffer.write(res.getKey() + ";" + res.getValue().toString());
                 System.out.println(res.getKey() + ";" + res.getValue().toString());
             }
+            buffer.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }

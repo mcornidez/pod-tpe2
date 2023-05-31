@@ -25,6 +25,7 @@ public class LogManager {
         try {
             buffer.write(dateFormat.format(new Date()) + " INFO [" + methodName + "] " + className +
                     " (" + className + ".java:" + lineNumber + ") - " + log + "\n");
+            buffer.flush();
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }

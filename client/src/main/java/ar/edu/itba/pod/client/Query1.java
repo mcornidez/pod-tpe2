@@ -1,6 +1,7 @@
 package ar.edu.itba.pod.client;
 
 import ar.edu.itba.pod.collators.Query1Collator;
+import ar.edu.itba.pod.combiners.Query1CombinerFactory;
 import ar.edu.itba.pod.mappers.Query1Mapper;
 import ar.edu.itba.pod.models.BikeRent;
 import ar.edu.itba.pod.models.Station;
@@ -70,8 +71,19 @@ public class Query1 {
             KeyValueSource<String, BikeRent> keyValueSource = KeyValueSource.fromList(bikesIList);
             Job<String, BikeRent> job = hazelcastInstance.getJobTracker("g2_query1").newJob(keyValueSource);
 
+            //Without combiner
+            /*
             List<Map.Entry<String, Long>> result = job
                         .mapper(new Query1Mapper(stations))
+                        .reducer(new Query1ReducerFactory())
+                        .submit(new Query1Collator())
+                        .get();
+             */
+
+            //With combiner
+            List<Map.Entry<String, Long>> result = job
+                        .mapper(new Query1Mapper(stations))
+                        .combiner(new Query1CombinerFactory())
                         .reducer(new Query1ReducerFactory())
                         .submit(new Query1Collator())
                         .get();
@@ -112,6 +124,7 @@ public class Query1 {
                 buffer.write(res.getKey() + ";" + res.getValue());
                 System.out.println(res.getKey() + ";" + res.getValue());
             }
+            buffer.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }

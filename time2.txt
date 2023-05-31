@@ -1,0 +1,3 @@
+2023-05-31 19:22:00 INFO [main] ar.edu.itba.pod.client.Query1 (ar.edu.itba.pod.client.Query1.java:44) - Inicio de la lectura del archivo
+2023-05-31 19:23:31 INFO [main] ar.edu.itba.pod.client.Query1 (ar.edu.itba.pod.client.Query1.java:67) - Inicio del trabajo map/reduce
+2023-05-31 19:24:57 INFO [main] ar.edu.itba.pod.client.Query1 (ar.edu.itba.pod.client.Query1.java:100) - Fin del trabajo map/reduce
