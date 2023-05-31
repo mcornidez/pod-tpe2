@@ -10,11 +10,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class LogManager {
-    private FileWriter buffer;
+    private BufferedWriter buffer;
 
     public LogManager(String outPath, String file) {
         try {
-            buffer = new FileWriter(Path.of(outPath + file).toFile());
+            buffer = new BufferedWriter(new FileWriter(outPath + file, true));
         } catch (IOException e) {
             e.printStackTrace();
         }

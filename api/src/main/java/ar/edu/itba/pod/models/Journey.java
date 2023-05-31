@@ -22,7 +22,7 @@ public class Journey implements Serializable {
         this.emplacement_pk_start = emplacement_pk_start;
         this.emplacement_pk_end = emplacement_pk_end;
         this.distance = distanceTo(emplacement_pk_start.getLatitude(), emplacement_pk_start.getLongitude(), emplacement_pk_end.getLatitude(), emplacement_pk_end.getLongitude());
-        long time = (endDate.getTime() - startDate.getTime())/3600;
+        Double time = (endDate.getTime() - startDate.getTime())/3600.0;
         this.speed = this.distance/time;
     }
 
@@ -63,7 +63,7 @@ public class Journey implements Serializable {
     }
 
     public int compareTo(Journey value) {
-        return value.getDistance().compareTo(this.distance);
+        return this.speed.compareTo(value.getSpeed());
     }
 
     @Override
@@ -71,7 +71,7 @@ public class Journey implements Serializable {
         return emplacement_pk_end.getName() + ";" +
                 new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(startDate) + ";" +
                 new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(endDate) + ";" +
-                String.format("%.2f", distance) +
+                String.format("%.2f", distance) + ";" +
                 String.format("%.2f", speed);
     }
 }

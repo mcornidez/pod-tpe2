@@ -92,7 +92,6 @@ public class Query2 {
             logger.info("Fin del trabajo map/reduce");
 
             writeResultToFile(outPath + "/query2.csv", result, n);
-            System.out.println(result);
 
 
         } catch (InterruptedException | ExecutionException e) {
@@ -111,13 +110,16 @@ public class Query2 {
     static void writeResultToFile(String path, List<Map.Entry<String, Journey>> result, int n){
         try {
             BufferedWriter buffer = new BufferedWriter(new FileWriter(path, false));
+            System.out.println("start_station;end_station;start_date;end_date;distance;speed");
             buffer.write("start_station;end_station;start_date;end_date;distance;speed");
 
             List<Map.Entry<String, Journey>> croppedResults = result.stream().limit(n).toList();
 
             for (Map.Entry<String, Journey> res : croppedResults){
                 buffer.newLine();
+                System.out.println();
                 buffer.write(res.getKey() + ";" + res.getValue().toString());
+                System.out.println(res.getKey() + ";" + res.getValue().toString());
             }
         } catch (IOException e) {
             e.printStackTrace();
