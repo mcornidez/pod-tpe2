@@ -27,9 +27,13 @@ En otra terminal, dentro de la carpeta /pod-tpe2-g2, correr el script:
 
 donde:
   ●  queryX es el script que corre la query X (1 o 2)
+  
   ● -Daddresses refiere a las direcciones IP de los nodos con sus puertos (una o más,separadas por punto y coma)
+  
   ● -DinPath indica el path donde están los archivos de entrada bikes.csv y stations.csv.
+  
   ● -DoutPath indica el path donde estarán ambos archivos de salida query1.csv ytime1.txt.
+  
   ● [params]: los parámetros extras que corresponden para algunas queries
 
   
