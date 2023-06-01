@@ -1,4 +1,5 @@
 # Programación de Objetos Distribuidos
+
 # Trabajo Práctico Especial 2: Alquiler de Bicicletas
 
 ## Compilación
@@ -26,6 +27,7 @@ En otra terminal, dentro de la carpeta /pod-tpe2-g2, correr el script:
 ```
 
 donde:
+
   ●  queryX es el script que corre la query X (1 o 2)
   
   ● -Daddresses refiere a las direcciones IP de los nodos con sus puertos (una o más,separadas por punto y coma)
