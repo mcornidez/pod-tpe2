@@ -2,17 +2,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <artifactId>tpe2-g2-parent</artifactId>
+    <artifactId>tpe2-l61432-parent</artifactId>
     <groupId>ar.edu.itba.pod</groupId>
     <version>2023.1Q</version>
   </parent>
-  <artifactId>tpe2-g2-client</artifactId>
+  <artifactId>tpe2-l61432-client</artifactId>
   <version>2023.1Q</version>
-  <name>tpe2-g2-client</name>
+  <name>tpe2-l61432-client</name>
   <dependencies>
     <dependency>
       <groupId>ar.edu.itba.pod</groupId>
-      <artifactId>tpe2-g2-api</artifactId>
+      <artifactId>tpe2-l61432-api</artifactId>
       <version>2023.1Q</version>
     </dependency>
     <dependency>

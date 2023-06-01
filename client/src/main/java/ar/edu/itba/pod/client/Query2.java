@@ -35,7 +35,7 @@ public class Query2 {
         final String outPath = ClientUtils.getProperty(ClientUtils.OUT_PATH, () -> "Missing out path.", x -> x).orElseThrow();
         final int n = Integer.parseInt(ClientUtils.getProperty(ClientUtils.N, () -> "Missing n.", x -> x).orElseThrow());
 
-        logger.info("tpe2-g2 Query2 Starting ...");
+        logger.info("Query2 Starting ...");
 
         final LogManager logManager = new LogManager(outPath, "/time2.txt");
         logManager.writeLog(

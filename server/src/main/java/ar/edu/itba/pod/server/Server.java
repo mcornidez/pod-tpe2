@@ -11,13 +11,13 @@ public class Server {
     private static Logger logger = LoggerFactory.getLogger(Server.class);
 
     public static void main(String[] args){
-        logger.info("tpe2-g2 Server Starting ...");
+        logger.info("Server Starting ...");
 
         //Config
         Config config = new Config();
 
         // Group Config
-        GroupConfig groupConfig = new GroupConfig().setName("tpe2-g2").setPassword("tpe2-g2-pass");
+        GroupConfig groupConfig = new GroupConfig().setName("tpe2-l61432").setPassword("tpe2-l61432-pass");
         config.setGroupConfig(groupConfig);
 
         // Network Config

@@ -3,10 +3,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>ar.edu.itba.pod</groupId>
-  <artifactId>tpe2-g2-parent</artifactId>
+  <artifactId>tpe2-l61432-parent</artifactId>
   <version>2023.1Q</version>
   <packaging>pom</packaging>
-  <name>tpe2-g2-parent</name>
+  <name>tpe2-l61432-parent</name>
   <modules>
     <module>api</module>
     <module>server</module>
@@ -18,7 +18,7 @@
     <slf4j.version>2.0.6</slf4j.version>
     <mockito.version>4.11.0</mockito.version>
     <junit5.version>5.9.1</junit5.version>
-    <hazelcast.version>3.6.5</hazelcast.version>
+    <hazelcast.version>3.8.6</hazelcast.version>
   </properties>
   <dependencyManagement>
     <dependencies>

@@ -31,7 +31,7 @@ public class Query1 {
         final String inPath = ClientUtils.getProperty(ClientUtils.IN_PATH, () -> "Missing in path.", x -> x).orElseThrow();
         final String outPath = ClientUtils.getProperty(ClientUtils.OUT_PATH, () -> "Missing out path.", x -> x).orElseThrow();
 
-        logger.info("tpe2-g2 Query1 Starting ...");
+        logger.info("Query1 Starting ...");
 
         logger.info("Starting bikes parsing...");
         final LogManager logManager = new LogManager(outPath, "time1.txt");

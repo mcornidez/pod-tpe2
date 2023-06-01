@@ -47,8 +47,8 @@ public class ClientUtils {
     }
 
     public static HazelcastInstance getHazelClientInstance(List<String> addresses) {
-        String name = "tpe2-g2";
-        String pass = "tpe2-g2-pass";
+        String name = "tpe2-l61432";
+        String pass = "tpe2-l61432-pass";
 
         ClientConfig clientConfig = new ClientConfig();
 
