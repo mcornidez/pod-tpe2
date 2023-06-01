@@ -33,20 +33,20 @@ public class Query1 {
 
         logger.info("Query1 Starting ...");
 
-        logger.info("Starting bikes parsing...");
-        final LogManager logManager = new LogManager(outPath, "time1.txt");
-        logManager.writeLog(
-                Thread.currentThread().getStackTrace()[1].getMethodName(),
-                Query1.class.getName(),
-                Thread.currentThread().getStackTrace()[1].getLineNumber(),
-                "Inicio de la lectura del archivo"
-        );
         try {
+
+            final LogManager logManager = new LogManager(outPath, "/time1.txt");
+            logManager.writeLog(
+                    Thread.currentThread().getStackTrace()[1].getMethodName(),
+                    Query1.class.getName(),
+                    Thread.currentThread().getStackTrace()[1].getLineNumber(),
+                    "Inicio de la lectura del archivo"
+            );
 
             logger.info("Hazelcast client Starting...");
             HazelcastInstance hazelcastInstance = ClientUtils.getHazelClientInstance(addresses);
             logger.info("Hazelcast client started");
-            IList<BikeRent> bikesIList = hazelcastInstance.getList("g2-query1-bikes-list");
+            IList<BikeRent> bikesIList = hazelcastInstance.getList("l61432-query1-bikes-list");
             bikesIList.clear();
 
             logger.info("Starting bikes parsing...");
@@ -62,6 +62,13 @@ public class Query1 {
                     Thread.currentThread().getStackTrace()[1].getMethodName(),
                     Query1.class.getName(),
                     Thread.currentThread().getStackTrace()[1].getLineNumber(),
+                    "Fin de la lectura del archivo"
+            );
+
+            logManager.writeLog(
+                    Thread.currentThread().getStackTrace()[1].getMethodName(),
+                    Query1.class.getName(),
+                    Thread.currentThread().getStackTrace()[1].getLineNumber(),
                     "Inicio del trabajo map/reduce"
             );
 
@@ -69,17 +76,17 @@ public class Query1 {
 
 
             KeyValueSource<String, BikeRent> keyValueSource = KeyValueSource.fromList(bikesIList);
-            Job<String, BikeRent> job = hazelcastInstance.getJobTracker("g2_query1").newJob(keyValueSource);
+            Job<String, BikeRent> job = hazelcastInstance.getJobTracker("l61432_query1").newJob(keyValueSource);
 
             //Without combiner
-            /*
+
             List<Map.Entry<String, Long>> result = job
                         .mapper(new Query1Mapper(stations))
                         .reducer(new Query1ReducerFactory())
                         .submit(new Query1Collator())
                         .get();
-             */
 
+/*
             //With combiner
             List<Map.Entry<String, Long>> result = job
                         .mapper(new Query1Mapper(stations))
@@ -88,6 +95,8 @@ public class Query1 {
                         .submit(new Query1Collator())
                         .get();
 
+
+ */
 
             logManager.writeLog(
                     Thread.currentThread().getStackTrace()[1].getMethodName(),
@@ -116,13 +125,12 @@ public class Query1 {
     static void writeResultToFile(String path, List<Map.Entry<String, Long>> result){
         try {
             BufferedWriter buffer = new BufferedWriter(new FileWriter(path, false));
-            System.out.println("station;started_trips");
             buffer.write("station;started_trips");
             for (Map.Entry<String, Long> res : result){
-                buffer.newLine();
-                System.out.println();
-                buffer.write(res.getKey() + ";" + res.getValue());
-                System.out.println(res.getKey() + ";" + res.getValue());
+                if (res.getValue() > 0) {
+                    buffer.newLine();
+                    buffer.write(res.getKey() + ";" + res.getValue());
+                }
             }
             buffer.flush();
         } catch (IOException e) {

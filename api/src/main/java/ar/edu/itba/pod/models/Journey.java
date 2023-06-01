@@ -1,7 +1,6 @@
 package ar.edu.itba.pod.models;
 
 import java.io.Serializable;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 

@@ -49,7 +49,7 @@ public class Query2 {
             logger.info("Hazelcast client Starting...");
             HazelcastInstance hazelcastInstance = ClientUtils.getHazelClientInstance(addresses);
             logger.info("Hazelcast client started");
-            IList<BikeRent> bikesIList = hazelcastInstance.getList("g2-query2-bikes-list");
+            IList<BikeRent> bikesIList = hazelcastInstance.getList("l61432-query2-bikes-list");
             bikesIList.clear();
 
             logger.info("Starting bikes parsing...");
@@ -72,8 +72,9 @@ public class Query2 {
 
 
             KeyValueSource<String, BikeRent> keyValueSource = KeyValueSource.fromList(bikesIList);
-            Job<String, BikeRent> job = hazelcastInstance.getJobTracker("g2_query1").newJob(keyValueSource);
+            Job<String, BikeRent> job = hazelcastInstance.getJobTracker("l61432_query1").newJob(keyValueSource);
 
+            /*
             //Without combiner
             List<Map.Entry<String, Journey>> result = job
                     .mapper(new Query2Mapper(stations))
@@ -81,7 +82,8 @@ public class Query2 {
                     .submit(new Query2Collator())
                     .get();
 
-/*
+*/
+
             //With combiner
             List<Map.Entry<String, Journey>> result = job
                     .mapper(new Query2Mapper(stations))
@@ -90,8 +92,6 @@ public class Query2 {
                     .submit(new Query2Collator())
                     .get();
 
-
- */
 
 
             logManager.writeLog(
@@ -122,16 +122,13 @@ public class Query2 {
     static void writeResultToFile(String path, List<Map.Entry<String, Journey>> result, int n){
         try {
             BufferedWriter buffer = new BufferedWriter(new FileWriter(path, false));
-            System.out.println("start_station;end_station;start_date;end_date;distance;speed");
             buffer.write("start_station;end_station;start_date;end_date;distance;speed");
 
             List<Map.Entry<String, Journey>> croppedResults = result.stream().limit(n).toList();
 
             for (Map.Entry<String, Journey> res : croppedResults){
                 buffer.newLine();
-                System.out.println();
                 buffer.write(res.getKey() + ";" + res.getValue().toString());
-                System.out.println(res.getKey() + ";" + res.getValue().toString());
             }
             buffer.flush();
         } catch (IOException e) {

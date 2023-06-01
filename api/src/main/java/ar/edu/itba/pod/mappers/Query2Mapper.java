@@ -5,7 +5,6 @@ import ar.edu.itba.pod.models.Journey;
 import ar.edu.itba.pod.models.Station;
 import com.hazelcast.mapreduce.Context;
 import com.hazelcast.mapreduce.Mapper;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

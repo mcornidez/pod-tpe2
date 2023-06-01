@@ -14,7 +14,7 @@ public class LogManager {
 
     public LogManager(String outPath, String file) {
         try {
-            buffer = new BufferedWriter(new FileWriter(outPath + file, true));
+            buffer = new BufferedWriter(new FileWriter(outPath + file, false));
         } catch (IOException e) {
             e.printStackTrace();
         }
