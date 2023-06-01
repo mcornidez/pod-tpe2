@@ -12,7 +12,7 @@ mvn clean install
 
 ## Correr el servidor
 
-Dentro de la carpeta /pod-tpe2-g2, correr el script:
+Dentro de la carpeta /pod-tpe2, correr el script:
 
 ```bash
 ./run-server.sh
