@@ -33,7 +33,7 @@ donde:
   ● [params]: los parámetros extras que corresponden para algunas queries
 
   
-## Query 1
+## Query 1: Total de viajes iniciados por miembros por estación
 
 ❏ Parámetros adicionales: Ninguno
 
@@ -43,7 +43,7 @@ donde:
 ./query1 -Daddresses='10.6.0.1:5701' -DinPath=.-DoutPath=.
 ```
 
-## Query 2
+## Query 2: Top N viajes más rápidos de cada estación de inicio
 
 ❏ Parámetros adicionales: n límite de cantidad de resultados (número entero)
 
